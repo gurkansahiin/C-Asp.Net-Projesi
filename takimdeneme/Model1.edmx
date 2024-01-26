@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="footballModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="lig">
+          <Key>
+            <PropertyRef Name="lig_id" />
+          </Key>
+          <Property Name="lig_id" Type="float" Nullable="false" />
+          <Property Name="adi" Type="nvarchar" MaxLength="255" />
+          <Property Name="ulke" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="takim">
+          <Key>
+            <PropertyRef Name="takim_id" />
+          </Key>
+          <Property Name="takim_id" Type="float" Nullable="false" />
+          <Property Name="lig_id" Type="float" />
+          <Property Name="Takım" Type="nvarchar" MaxLength="255" />
+          <Property Name="ulke" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <Association Name="FK_takim_lig">
+          <End Role="lig" Type="Self.lig" Multiplicity="0..1" />
+          <End Role="takim" Type="Self.takim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lig">
+              <PropertyRef Name="lig_id" />
+            </Principal>
+            <Dependent Role="takim">
+              <PropertyRef Name="lig_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="footballModelStoreContainer">
+          <EntitySet Name="lig" EntityType="Self.lig" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="takim" EntityType="Self.takim" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_takim_lig" Association="Self.FK_takim_lig">
+            <End Role="lig" EntitySet="lig" />
+            <End Role="takim" EntitySet="takim" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="footballModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="lig">
+          <Key>
+            <PropertyRef Name="lig_id" />
+          </Key>
+          <Property Name="lig_id" Type="Double" Nullable="false" />
+          <Property Name="adi" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ulke" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="takim" Relationship="Self.FK_takim_lig" FromRole="lig" ToRole="takim" />
+        </EntityType>
+        <EntityType Name="takim">
+          <Key>
+            <PropertyRef Name="takim_id" />
+          </Key>
+          <Property Name="takim_id" Type="Double" Nullable="false" />
+          <Property Name="lig_id" Type="Double" />
+          <Property Name="Takım" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ulke" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="lig" Relationship="Self.FK_takim_lig" FromRole="takim" ToRole="lig" />
+        </EntityType>
+        <Association Name="FK_takim_lig">
+          <End Role="lig" Type="Self.lig" Multiplicity="0..1" />
+          <End Role="takim" Type="Self.takim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lig">
+              <PropertyRef Name="lig_id" />
+            </Principal>
+            <Dependent Role="takim">
+              <PropertyRef Name="lig_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="footballEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="lig" EntityType="Self.lig" />
+          <EntitySet Name="takim" EntityType="Self.takim" />
+          <AssociationSet Name="FK_takim_lig" Association="Self.FK_takim_lig">
+            <End Role="lig" EntitySet="lig" />
+            <End Role="takim" EntitySet="takim" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="footballModelStoreContainer" CdmEntityContainer="footballEntities">
+          <EntitySetMapping Name="lig">
+            <EntityTypeMapping TypeName="footballModel.lig">
+              <MappingFragment StoreEntitySet="lig">
+                <ScalarProperty Name="lig_id" ColumnName="lig_id" />
+                <ScalarProperty Name="adi" ColumnName="adi" />
+                <ScalarProperty Name="ulke" ColumnName="ulke" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="takim">
+            <EntityTypeMapping TypeName="footballModel.takim">
+              <MappingFragment StoreEntitySet="takim">
+                <ScalarProperty Name="takim_id" ColumnName="takim_id" />
+                <ScalarProperty Name="lig_id" ColumnName="lig_id" />
+                <ScalarProperty Name="Takım" ColumnName="Takım" />
+                <ScalarProperty Name="ulke" ColumnName="ulke" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

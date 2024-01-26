@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Maç Gösterim Ekranı</title>
+</head>
+<body>
+    <h1>Maç Gösterim Ekranı</h1>
+    <?php
+    $connectionString = "Data Source=.\MSSQLSERVER02;Initial Catalog=football;Integrated Security=True";
+    // Veritabanı bağlantısını gerçekleştirin ve takımları çekin
+    $conn = new PDO($connectionString);
+    $query = "SELECT takim_id, Takım FROM takimlar ORDER BY RAND() LIMIT 6";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $teams = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Maç gösterim ekranını oluşturun
+    for ($i = 0; $i < 3; $i++) {
+    $team1 = $teams[$i * 2];
+    $team2 = $teams[$i * 2 + 1];
+    ?>
+    <div id="match<?php echo ($i + 1); ?>">
+        <label class="team-name"><?php echo $team1['Takım']; ?></label>
+        <input type="hidden" class="team-id" value="<?php echo $team1['takim_id']; ?>">
+        VS
+        <label class="team-name"><?php echo $team2['Takım']; ?></label>
+        <input type="hidden" class="team-id" value="<?php echo $team2['takim_id']; ?>">
+        <br>
+        <input type="radio" name="result<?php echo ($i + 1); ?>" value="<?php echo $team1['Takım']; ?>"><?php echo $team1['Takım']; ?>
+        <input type="radio" name="result<?php echo ($i + 1); ?>" value="Berabere">Berabere
+        <input type="radio" name="result<?php echo ($i + 1); ?>" value="<?php echo $team2['Takım']; ?>"><?php echo $team2['Takım']; ?>
+    </div>
+    <br>
+    <?php
+    }
+    ?>
+    <button onclick="loadTeams()">Yeniden Yükle</button>
+    <button onclick="playMatch()">Oyna</button>
+
+    <script type="text/javascript">
+        function loadTeams() {
+            var teamLabels = document.getElementsByClassName('team-name');
+            var teamIds = document.getElementsByClassName('team-id');
+            var teamOptions = <? php echo json_encode($teams); ?>;
+
+            // Takımları yeniden yükleme
+            for (var i = 0; i < teamLabels.length; i++) {
+                var randomIndex = Math.floor(Math.random() * teamOptions.length);
+                teamLabels[i].innerText = teamOptions[randomIndex].Takım;
+                teamIds[i].value = teamOptions[randomIndex].takim_id;
+                teamOptions.splice(randomIndex, 1);
+            }
+        }
+
+        function playMatch() {
+            // Maç sonuçlarını almak ve işlemek için gereken kodu buraya ekleyebilirsiniz
+            // ...
+        }
+    </script>
+</body>
+</html>

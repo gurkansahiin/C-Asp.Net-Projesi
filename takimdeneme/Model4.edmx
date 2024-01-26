@@ -1,0 +1,429 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="footballModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="futbolcular">
+          <Key>
+            <PropertyRef Name="OID" />
+          </Key>
+          <Property Name="İsim" Type="nvarchar" MaxLength="255" />
+          <Property Name="Mevki" Type="nvarchar" MaxLength="255" />
+          <Property Name="TZ Gol" Type="float" />
+          <Property Name="TZ Lig Maç" Type="float" />
+          <Property Name="Kullandığı Ayak" Type="nvarchar" MaxLength="255" />
+          <Property Name="OID" Type="float" Nullable="false" />
+          <Property Name="Klup_id" Type="float" />
+          <Property Name="Ülke" Type="nvarchar" MaxLength="255" />
+          <Property Name="Boy" Type="nvarchar" MaxLength="255" />
+          <Property Name="Ağırlık" Type="nvarchar" MaxLength="255" />
+          <Property Name="Yaş" Type="float" />
+          <Property Name="Piyasa Değeri" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="lig">
+          <Key>
+            <PropertyRef Name="lig_id" />
+          </Key>
+          <Property Name="lig_id" Type="float" Nullable="false" />
+          <Property Name="adi" Type="nvarchar" MaxLength="255" />
+          <Property Name="ulke" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="takim">
+          <Key>
+            <PropertyRef Name="takim_id" />
+          </Key>
+          <Property Name="takim_id" Type="float" Nullable="false" />
+          <Property Name="lig_id" Type="float" />
+          <Property Name="Takım" Type="nvarchar" MaxLength="255" />
+          <Property Name="ulke" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="transfer">
+          <Key>
+            <PropertyRef Name="transfer_id" />
+          </Key>
+          <Property Name="İsim" Type="nvarchar" MaxLength="255" />
+          <Property Name="o_id" Type="float" />
+          <Property Name="Yeni_takim_id" Type="float" />
+          <Property Name="Eski_takim_id" Type="float" />
+          <Property Name="Tür" Type="nvarchar" MaxLength="255" />
+          <Property Name="Bedel" Type="nvarchar" MaxLength="255" />
+          <Property Name="transfer_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="uye">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="ad" Type="varchar" MaxLength="50" />
+          <Property Name="e_mail" Type="varchar" MaxLength="50" />
+          <Property Name="sifre" Type="varchar" MaxLength="50" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_futbolcular_takim">
+          <End Role="takim" Type="Self.takim" Multiplicity="0..1" />
+          <End Role="futbolcular" Type="Self.futbolcular" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="takim">
+              <PropertyRef Name="takim_id" />
+            </Principal>
+            <Dependent Role="futbolcular">
+              <PropertyRef Name="Klup_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_takim_lig">
+          <End Role="lig" Type="Self.lig" Multiplicity="0..1" />
+          <End Role="takim" Type="Self.takim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lig">
+              <PropertyRef Name="lig_id" />
+            </Principal>
+            <Dependent Role="takim">
+              <PropertyRef Name="lig_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transfer_futbolcular">
+          <End Role="futbolcular" Type="Self.futbolcular" Multiplicity="0..1" />
+          <End Role="transfer" Type="Self.transfer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="futbolcular">
+              <PropertyRef Name="OID" />
+            </Principal>
+            <Dependent Role="transfer">
+              <PropertyRef Name="o_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transfer_takim">
+          <End Role="takim" Type="Self.takim" Multiplicity="0..1" />
+          <End Role="transfer" Type="Self.transfer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="takim">
+              <PropertyRef Name="takim_id" />
+            </Principal>
+            <Dependent Role="transfer">
+              <PropertyRef Name="Yeni_takim_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transfer_takim1">
+          <End Role="takim" Type="Self.takim" Multiplicity="0..1" />
+          <End Role="transfer" Type="Self.transfer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="takim">
+              <PropertyRef Name="takim_id" />
+            </Principal>
+            <Dependent Role="transfer">
+              <PropertyRef Name="Eski_takim_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="footballModel1StoreContainer">
+          <EntitySet Name="futbolcular" EntityType="Self.futbolcular" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="lig" EntityType="Self.lig" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="takim" EntityType="Self.takim" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="transfer" EntityType="Self.transfer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="uye" EntityType="Self.uye" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_futbolcular_takim" Association="Self.FK_futbolcular_takim">
+            <End Role="takim" EntitySet="takim" />
+            <End Role="futbolcular" EntitySet="futbolcular" />
+          </AssociationSet>
+          <AssociationSet Name="FK_takim_lig" Association="Self.FK_takim_lig">
+            <End Role="lig" EntitySet="lig" />
+            <End Role="takim" EntitySet="takim" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transfer_futbolcular" Association="Self.FK_transfer_futbolcular">
+            <End Role="futbolcular" EntitySet="futbolcular" />
+            <End Role="transfer" EntitySet="transfer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transfer_takim" Association="Self.FK_transfer_takim">
+            <End Role="takim" EntitySet="takim" />
+            <End Role="transfer" EntitySet="transfer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transfer_takim1" Association="Self.FK_transfer_takim1">
+            <End Role="takim" EntitySet="takim" />
+            <End Role="transfer" EntitySet="transfer" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="footballModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="futbolcular">
+          <Key>
+            <PropertyRef Name="OID" />
+          </Key>
+          <Property Name="İsim" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Mevki" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="TZ_Gol" Type="Double" />
+          <Property Name="TZ_Lig_Maç" Type="Double" />
+          <Property Name="Kullandığı_Ayak" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="OID" Type="Double" Nullable="false" />
+          <Property Name="Klup_id" Type="Double" />
+          <Property Name="Ülke" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Boy" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Ağırlık" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Yaş" Type="Double" />
+          <Property Name="Piyasa_Değeri" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="takim" Relationship="Self.FK_futbolcular_takim" FromRole="futbolcular" ToRole="takim" />
+          <NavigationProperty Name="transfer" Relationship="Self.FK_transfer_futbolcular" FromRole="futbolcular" ToRole="transfer" />
+        </EntityType>
+        <EntityType Name="lig">
+          <Key>
+            <PropertyRef Name="lig_id" />
+          </Key>
+          <Property Name="lig_id" Type="Double" Nullable="false" />
+          <Property Name="adi" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ulke" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="takim" Relationship="Self.FK_takim_lig" FromRole="lig" ToRole="takim" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="takim">
+          <Key>
+            <PropertyRef Name="takim_id" />
+          </Key>
+          <Property Name="takim_id" Type="Double" Nullable="false" />
+          <Property Name="lig_id" Type="Double" />
+          <Property Name="Takım" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ulke" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="futbolcular" Relationship="Self.FK_futbolcular_takim" FromRole="takim" ToRole="futbolcular" />
+          <NavigationProperty Name="lig" Relationship="Self.FK_takim_lig" FromRole="takim" ToRole="lig" />
+          <NavigationProperty Name="transfer" Relationship="Self.FK_transfer_takim" FromRole="takim" ToRole="transfer" />
+          <NavigationProperty Name="transfer1" Relationship="Self.FK_transfer_takim1" FromRole="takim" ToRole="transfer" />
+        </EntityType>
+        <EntityType Name="transfer">
+          <Key>
+            <PropertyRef Name="transfer_id" />
+          </Key>
+          <Property Name="İsim" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="o_id" Type="Double" />
+          <Property Name="Yeni_takim_id" Type="Double" />
+          <Property Name="Eski_takim_id" Type="Double" />
+          <Property Name="Tür" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Bedel" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="transfer_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="futbolcular" Relationship="Self.FK_transfer_futbolcular" FromRole="transfer" ToRole="futbolcular" />
+          <NavigationProperty Name="takim" Relationship="Self.FK_transfer_takim" FromRole="transfer" ToRole="takim" />
+          <NavigationProperty Name="takim1" Relationship="Self.FK_transfer_takim1" FromRole="transfer" ToRole="takim" />
+        </EntityType>
+        <EntityType Name="uye">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="ad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="e_mail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="sifre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <Association Name="FK_futbolcular_takim">
+          <End Role="takim" Type="Self.takim" Multiplicity="0..1" />
+          <End Role="futbolcular" Type="Self.futbolcular" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="takim">
+              <PropertyRef Name="takim_id" />
+            </Principal>
+            <Dependent Role="futbolcular">
+              <PropertyRef Name="Klup_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transfer_futbolcular">
+          <End Role="futbolcular" Type="Self.futbolcular" Multiplicity="0..1" />
+          <End Role="transfer" Type="Self.transfer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="futbolcular">
+              <PropertyRef Name="OID" />
+            </Principal>
+            <Dependent Role="transfer">
+              <PropertyRef Name="o_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_takim_lig">
+          <End Role="lig" Type="Self.lig" Multiplicity="0..1" />
+          <End Role="takim" Type="Self.takim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lig">
+              <PropertyRef Name="lig_id" />
+            </Principal>
+            <Dependent Role="takim">
+              <PropertyRef Name="lig_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transfer_takim">
+          <End Role="takim" Type="Self.takim" Multiplicity="0..1" />
+          <End Role="transfer" Type="Self.transfer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="takim">
+              <PropertyRef Name="takim_id" />
+            </Principal>
+            <Dependent Role="transfer">
+              <PropertyRef Name="Yeni_takim_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transfer_takim1">
+          <End Role="takim" Type="Self.takim" Multiplicity="0..1" />
+          <End Role="transfer" Type="Self.transfer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="takim">
+              <PropertyRef Name="takim_id" />
+            </Principal>
+            <Dependent Role="transfer">
+              <PropertyRef Name="Eski_takim_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="footballEntities4" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="futbolcular" EntityType="Self.futbolcular" />
+          <EntitySet Name="lig" EntityType="Self.lig" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="takim" EntityType="Self.takim" />
+          <EntitySet Name="transfer" EntityType="Self.transfer" />
+          <EntitySet Name="uye" EntityType="Self.uye" />
+          <AssociationSet Name="FK_futbolcular_takim" Association="Self.FK_futbolcular_takim">
+            <End Role="takim" EntitySet="takim" />
+            <End Role="futbolcular" EntitySet="futbolcular" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transfer_futbolcular" Association="Self.FK_transfer_futbolcular">
+            <End Role="futbolcular" EntitySet="futbolcular" />
+            <End Role="transfer" EntitySet="transfer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_takim_lig" Association="Self.FK_takim_lig">
+            <End Role="lig" EntitySet="lig" />
+            <End Role="takim" EntitySet="takim" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transfer_takim" Association="Self.FK_transfer_takim">
+            <End Role="takim" EntitySet="takim" />
+            <End Role="transfer" EntitySet="transfer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transfer_takim1" Association="Self.FK_transfer_takim1">
+            <End Role="takim" EntitySet="takim" />
+            <End Role="transfer" EntitySet="transfer" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="footballModel1StoreContainer" CdmEntityContainer="footballEntities4">
+          <EntitySetMapping Name="futbolcular">
+            <EntityTypeMapping TypeName="footballModel1.futbolcular">
+              <MappingFragment StoreEntitySet="futbolcular">
+                <ScalarProperty Name="İsim" ColumnName="İsim" />
+                <ScalarProperty Name="Mevki" ColumnName="Mevki" />
+                <ScalarProperty Name="TZ_Gol" ColumnName="TZ Gol" />
+                <ScalarProperty Name="TZ_Lig_Maç" ColumnName="TZ Lig Maç" />
+                <ScalarProperty Name="Kullandığı_Ayak" ColumnName="Kullandığı Ayak" />
+                <ScalarProperty Name="OID" ColumnName="OID" />
+                <ScalarProperty Name="Klup_id" ColumnName="Klup_id" />
+                <ScalarProperty Name="Ülke" ColumnName="Ülke" />
+                <ScalarProperty Name="Boy" ColumnName="Boy" />
+                <ScalarProperty Name="Ağırlık" ColumnName="Ağırlık" />
+                <ScalarProperty Name="Yaş" ColumnName="Yaş" />
+                <ScalarProperty Name="Piyasa_Değeri" ColumnName="Piyasa Değeri" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="lig">
+            <EntityTypeMapping TypeName="footballModel1.lig">
+              <MappingFragment StoreEntitySet="lig">
+                <ScalarProperty Name="lig_id" ColumnName="lig_id" />
+                <ScalarProperty Name="adi" ColumnName="adi" />
+                <ScalarProperty Name="ulke" ColumnName="ulke" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="footballModel1.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="takim">
+            <EntityTypeMapping TypeName="footballModel1.takim">
+              <MappingFragment StoreEntitySet="takim">
+                <ScalarProperty Name="takim_id" ColumnName="takim_id" />
+                <ScalarProperty Name="lig_id" ColumnName="lig_id" />
+                <ScalarProperty Name="Takım" ColumnName="Takım" />
+                <ScalarProperty Name="ulke" ColumnName="ulke" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="transfer">
+            <EntityTypeMapping TypeName="footballModel1.transfer">
+              <MappingFragment StoreEntitySet="transfer">
+                <ScalarProperty Name="İsim" ColumnName="İsim" />
+                <ScalarProperty Name="o_id" ColumnName="o_id" />
+                <ScalarProperty Name="Yeni_takim_id" ColumnName="Yeni_takim_id" />
+                <ScalarProperty Name="Eski_takim_id" ColumnName="Eski_takim_id" />
+                <ScalarProperty Name="Tür" ColumnName="Tür" />
+                <ScalarProperty Name="Bedel" ColumnName="Bedel" />
+                <ScalarProperty Name="transfer_id" ColumnName="transfer_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="uye">
+            <EntityTypeMapping TypeName="footballModel1.uye">
+              <MappingFragment StoreEntitySet="uye">
+                <ScalarProperty Name="ad" ColumnName="ad" />
+                <ScalarProperty Name="e_mail" ColumnName="e_mail" />
+                <ScalarProperty Name="sifre" ColumnName="sifre" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

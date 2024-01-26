@@ -1,0 +1,83 @@
+ lbldeneme.Text = (hdnMatchResult.Value).ToString();
+            string matchResult = hdnMatchResult.Value;
+            if (hdnMatchResult.Value != null && Request.QueryString["textBoxValue"] != null && Request.QueryString["radioSelection"] != null && Session["mail"] != null)
+            {
+                string textBoxValue = Request.QueryString["textBoxValue"];
+                string radioSelection = Request.QueryString["radioSelection"];
+
+                string userEmail = Session["mail"].ToString();
+
+                if (radioSelection == matchResult)
+                {
+                    // Match results match, winning situation
+                    if (int.TryParse(textBoxValue, out int value))
+                    {
+                        // Update balance
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            connection.Open();
+                            SqlCommand selectCmd = new SqlCommand("SELECT bakiye FROM uye WHERE e_mail = @Email", connection);
+                            selectCmd.Parameters.AddWithValue("@Email", userEmail);
+                            int currentBalance = (int)selectCmd.ExecuteScalar();
+
+                            int newBalance = currentBalance + value;
+
+                            SqlCommand updateCmd = new SqlCommand("UPDATE uye SET bakiye = @NewBalance WHERE e_mail = @Email", connection);
+                            updateCmd.Parameters.AddWithValue("@NewBalance", newBalance);
+                            updateCmd.Parameters.AddWithValue("@Email", userEmail);
+                            updateCmd.ExecuteNonQuery();
+
+                            // Additional operations after updating the balance
+
+                            // Display winning message
+                            string message = "Tebrikler, kazandınız!";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "showMessage", $"alert('{message}');", true);
+                            Response.Redirect("dene.aspx");
+                        }
+                    }
+                    else
+                    {
+                        // Entered value is not a valid number, handle the error here
+                    }
+                }
+                else
+                {
+                    // Match results do not match, losing situation
+                    if (int.TryParse(textBoxValue, out int value))
+                    {
+                        // Update balance if it is sufficient
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            connection.Open();
+                            SqlCommand selectCmd = new SqlCommand("SELECT bakiye FROM uye WHERE e_mail = @Email", connection);
+                            selectCmd.Parameters.AddWithValue("@Email", userEmail);
+                            int currentBalance = (int)selectCmd.ExecuteScalar();
+
+                            int newBalance = currentBalance - value;
+
+                            if (newBalance >= 0)
+                            {
+                                SqlCommand updateCmd = new SqlCommand("UPDATE uye SET bakiye = @NewBalance WHERE e_mail = @Email", connection);
+                                updateCmd.Parameters.AddWithValue("@NewBalance", newBalance);
+                                updateCmd.Parameters.AddWithValue("@Email", userEmail);
+                                updateCmd.ExecuteNonQuery();
+
+                                // Additional operations after updating the balance
+
+                                // Display losing message
+                                string message = "Maalesef, kaybettiniz!";
+                                ScriptManager.RegisterStartupScript(this, GetType(), "showMessage", $"alert('{message}');", true);
+                                Response.Redirect("dene.aspx");
+                            }
+                            else
+                            {
+                                // Insufficient balance, handle the error here
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Entered value is not a valid number, handle the error here
+                    }
+                }
+            }
